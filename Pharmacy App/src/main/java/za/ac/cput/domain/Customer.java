@@ -1,74 +1,105 @@
-package main.java.za.ac.cput.domain;
+/*
+ * Customer.java
+ * Author: Bruneez Apollis
+ * Student Number:
+ * Date: 05/08/2025
+ */
 
-public class Customer extends User{
-    private String address;
+package za.ac.cput.domain;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+public class Customer extends User {
+
+    @Embedded
+    private Address address;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
-    private Customer(CustomerBuilder builder) {
-        this.userID = builder.userID;
-        this.username = builder.username;
-        this.email = builder.email;
-        this.password = builder.password;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Cart cart;
+
+    // Protected default constructor for JPA
+    protected Customer() {}
+
+    // Builder constructor
+    private Customer(Builder builder) {
+        super(builder); // calls User's builder constructor
         this.address = builder.address;
         this.phoneNumber = builder.phoneNumber;
     }
 
-    public String getAddress() {
+    // Getters
+    public Address getAddress() {
         return address;
     }
+
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "userID=" + userID +
-                ", username='" + username + '\'' +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", address=" + address +
                 '}';
     }
 
-    public static class CustomerBuilder {
-        private int userID;
-        private String username;
-        private String email;
-        private String password;
-        private String address;
+    // Builder for Customer
+    public static class Builder extends User.Builder<Builder> {
+        private Address address;
         private String phoneNumber;
 
-        public CustomerBuilder setUserID(int userID) {
-            this.userID = userID;
-            return this;
+        public Builder() {
+            this.setRole(Role.CUSTOMER); // ensures role is always CUSTOMER
         }
 
-        public CustomerBuilder setUsername(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public CustomerBuilder setEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public CustomerBuilder setPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public CustomerBuilder setAddress(String address) {
+        public Builder setAddress(Address address) {
             this.address = address;
             return this;
         }
 
-        public CustomerBuilder setPhoneNumber(String phoneNumber) {
+        public Builder setPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
+        public Builder copy(Customer customer) {
+            this.setUserId(customer.getUserId())
+                    .setFirstName(customer.getFirstName())
+                    .setLastName(customer.getLastName())
+                    .setEmail(customer.getEmail())
+                    .setPassword(customer.getPassword())
+                    .setAddress(customer.getAddress())
+                    .setPhoneNumber(customer.getPhoneNumber());
+            return this;
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
         public Customer build() {
             return new Customer(this);
         }
