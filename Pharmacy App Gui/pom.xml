@@ -26,6 +26,16 @@
             <version>17.0.6</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>za.ac.cput</groupId>
+            <artifactId>pharmacyapp</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
@@ -51,8 +61,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>9</source> <!-- Changed from 8 to 9 -->
-                    <target>9</target> <!-- Changed from 8 to 9 -->
+                    <source>11</source> <!-- Changed from 8 to 9 -->
+                    <target>11</target> <!-- Changed from 8 to 9 -->
                 </configuration>
             </plugin>
 
